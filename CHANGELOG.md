@@ -4,6 +4,7 @@ Record the version you vendor into a client repo so you can tell when it's stale
 
 ## Unreleased
 
+- `implement-spec`, `templates/specs/README.md`, `templates/specs/_template/design.md`: contract files hold no logic, and the implementation goes in a separate module that test agents never read. Delta mode now checks for this before running. This fixes a dual-blind breach where a delta-run test agent read the contract file and saw the implementation.
 - `status-report` skill
 - `scoped-tests` skill + `test-map-template.md`
 - `git-hygiene` skill

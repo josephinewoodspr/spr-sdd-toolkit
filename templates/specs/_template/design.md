@@ -7,6 +7,8 @@
 |---|---|
 | `<path/to/contract>` | <interface / types / factory stub> |
 
+**Implementation module:** `<path/to/implementation>`. This is not part of the contract. Contract files hold no logic, and each entry point delegates here. Implementation agents edit this module, and test agents never read it.
+
 ## Data contract
 <What this component consumes and produces: record or schema shapes, upstream and downstream components, persisted data, config keys read.>
 

@@ -54,7 +54,7 @@ Spawn a **separate** sub-agent with worktree isolation, **from the base commit r
 
 > You are the IMPLEMENTATION agent for spec NNN. Working in this worktree:
 > 1. Create branch `spec/NNN-impl` from HEAD.
-> 2. Implement every acceptance criterion by filling the contract's stub. Follow CLAUDE.md and the constitution.
+> 2. Implement every acceptance criterion in a separate implementation module, not in the contract files. Contract files hold no logic: each entry point only delegates to the implementation module. Never put logic in a contract file. Follow CLAUDE.md and the constitution.
 > 3. Write ONLY source (and config, if design.md declares config keys). Do NOT create, read, or modify any test files. This spec's tests exist elsewhere, and you must know nothing about them.
 > 4. Don't change the public contract. If it can't express the spec, STOP and report the conflict. Don't work around it.
 > 5. The project must build or import cleanly. You may smoke-run it, but don't write tests.
@@ -90,7 +90,8 @@ Never delete or skip a failing test to get to green. Repeat run and triage until
 Same phases, with these changes:
 
 - **Preconditions:** the spec's changelog names the driver (a change request or defect id) and the exact AC ids that are new, amended, or retired. For a CODE-WRONG bug against an unchanged spec, the driver is the bug report and the target is the AC it violates.
-- **Test agent:** also gets the changed or target AC ids and, for bugs, the report text. It writes or updates tests only for those ACs. For a bug, the regression test must **fail against current main**. Verify that before Phase 2. If it passes, the bug is misdiagnosed: stop and report. The agent retires tests only for explicitly retired ACs, citing the changelog row.
+  - Contract files contain no logic. If they do, first do a refactor with no behavior change that moves the logic into an implementation module, then run the delta. Otherwise the test agent reads the implementation when it reads the contract.
+- **Test agent:** also gets the changed or target AC ids and, for bugs, the report text. Give it an explicit do-not-read list of the implementation modules. Its view of the contract is `design.md` plus the contract files, which hold no logic. It writes or updates tests only for those ACs. For a bug, the regression test must **fail against current main**. Verify that before Phase 2. If it passes, the bug is misdiagnosed: stop and report. The agent retires tests only for explicitly retired ACs, citing the changelog row.
 - **Implementation agent:** also gets the same AC ids and the bug report. It changes only what those ACs require. It still sees none of the tests, including the new regression tests.
 - **Phase 3:** run the **entire** suite. The tests for unchanged ACs are the regression net. An old test that newly fails is an IMPL-BUG, unless its AC was explicitly retired.
 

@@ -67,6 +67,8 @@ Numbering is sequential and never reused. Reference the spec in every commit tha
 
 At approval, `design.md` declares the **contract**: the interfaces, the record types passed between components, and a factory or entry-point stub. The repo contains it, committed. Tests exercise the contract and fail until the implementation fills it in. Nothing about the implementation (internal names, structure, hints) appears in the contract or the spec.
 
+**Contract files hold no logic.** They contain only types, interfaces, and entry-point signatures, and each entry point delegates to a separate implementation module. `design.md` names the implementation module separately from the contract files. Test agents may read the contract but never the implementation module, which keeps later delta runs blind.
+
 ## Implementation and triage
 
 - Implementation runs through **`/implement-spec NNN`** (dual-blind): one isolated agent writes the tests and a separate isolated agent writes the implementation. Both work from the spec and contract alone, and neither sees the other's work. Amendments and bug fixes use its delta mode.
